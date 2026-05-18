@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python 求和方法知识库</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <header>
+        <h1>🐍 Python 求和方法知识库</h1>
+        <p class="subtitle">全面收录 Python 中的各种求和方法与技巧</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#sum">内置函数 sum</a></li>
+            <li><a href="#loop">循环累加</a></li>
+            <li><a href="#comprehension">推导式 + sum</a></li>
+            <li><a href="#reduce">functools.reduce</a></li>
+            <li><a href="#accumulate">itertools.accumulate</a></li>
+            <li><a href="#fsum">math.fsum</a></li>
+            <li><a href="#recursion">递归求和</a></li>
+            <li><a href="#numpy">NumPy 求和</a></li>
+            <li><a href="#pandas">Pandas 求和</a></li>
+            <li><a href="#parallel">并行分块求和</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="sum" class="method-card">
+            <h2>1. 内置函数 sum()</h2>
+            <div class="badge">最常用</div>
+            <div class="content">
+                <h3>适用情形</h3>
+                <p>适用于对可迭代对象（列表、元组、集合等）进行简单求和，是最 Pythonic 的方式。</p>
+                
+                <h3>使用方法</h3>
+                <pre><code class="language-python">sum(iterable, start=0)</code></pre>
+                
+                <h3>示例代码</h3>
+                <pre><code class="language-python"># 基本用法
+numbers = [1, 2, 3, 4, 5]
+result = sum(numbers)
+print(result)  # 输出：15
+
+# 带初始值
+result = sum(numbers, 10)
+print(result)  # 输出：25
+
+# 对元组求和
+numbers_tuple = (10, 20, 30)
+print(sum(numbers_tuple))  # 输出：60
+
+# 对集合求和
+numbers_set = {1, 2, 3, 4}
+print(sum(numbers_set))  # 输出：10</code></pre>
+
+                <h3>注意事项</h3>
+                <ul>
+                    <li>第二个参数 start 是可选的，默认为 0</li>
+                    <li>不能用于字符串连接（会抛出 TypeError）</li>
+                    <li>对于浮点数可能存在精度问题，此时可用 math.fsum()</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="loop" class="method-card">
+            <h2>2. 循环累加</h2>
+            <div class="badge">基础方法</div>
+            <div class="content">
+                <h3>适用情形</h3>
+                <p>适用于需要在求和过程中添加额外逻辑的场景，如条件过滤、转换等。</p>
+                
+                <h3>使用方法</h3>
+                <pre><code class="language-python">total = 0
+for item in iterable:
+    total += item</code></pre>
+                
+                <h3>示例代码</h3>
+                <pre><code class="language-python"># 基本循环累加
+numbers = [1, 2, 3, 4, 5]
+total = 0
+for num in numbers:
+    total += num
+print(total)  # 输出：15
+
+# 带条件过滤的累加
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+even_sum = 0
+for num in numbers:
+    if num % 2 == 0:
+        even_sum += num
+print(even_sum)  # 输出：30 (2+4+6+8+10)
+
+# 累加时进行转换
+numbers = ["1", "2", "3", "4", "5"]
+total = 0
+for num_str in numbers:
+    total += int(num_str)
+print(total)  # 输出：15
+
+# 使用 while 循环
+numbers = [1, 2, 3, 4, 5]
+total = 0
+i = 0
+while i < len(numbers):
+    total += numbers[i]
+    i += 1
+print(total)  # 输出：15</code></pre>
+
+                <h3>注意事项</h3>
+                <ul>
+                    <li>最灵活的方法，可以在累加过程中添加任意逻辑</li>
+                    <li>代码量相对较多，但可读性好</li>
+                    <li>适合初学者理解求和的本质</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="comprehension" class="method-card">
+            <h2>3. 推导式 + sum()</h2>
+            <div class="badge">推荐</div>
+            <div class="content">
+                <h3>适用情形</h3>
+                <p>适用于需要先对数据进行过滤或转换后再求和的场景，代码简洁优雅。</p>
+                
+                <h3>使用方法</h3>
+                <pre><code class="language-python">sum(expression for item in iterable if condition)
+sum([expression for item in iterable])</code></pre>
+                
+                <h3>示例代码</h3>
+                <pre><code class="language-python"># 生成器表达式 + sum（推荐，内存效率高）
+numbers = [1, 2, 3, 4, 5]
+result = sum(x * 2 for x in numbers)
+print(result)  # 输出：30
+
+# 带条件的生成器表达式
+numbers = range(1, 11)
+even_sum = sum(x for x in numbers if x % 2 == 0)
+print(even_sum)  # 输出：30
+
+# 列表推导式 + sum
+numbers = [1, 2, 3, 4, 5]
+squares_sum = sum([x**2 for x in numbers])
+print(squares_sum)  # 输出：55 (1+4+9+16+25)
+
+# 嵌套推导式求和
+matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+total = sum(num for row in matrix for num in row)
+print(total)  # 输出：45
+
+# 字典推导式求和
+prices = {"apple": 1.5, "banana": 0.8, "orange": 1.2}
+total = sum(price for price in prices.values())
+print(total)  # 输出：3.5
+
+# 字符串长度求和
+words = ["python", "java", "javascript"]
+total_length = sum(len(word) for word in words)
+print(total_length)  # 输出：17</code></pre>
+
+                <h3>注意事项</h3>
+                <ul>
+                    <li>生成器表达式（圆括号）比列表推导式（方括号）更节省内存</li>
+                    <li>适合复杂的数据处理和过滤场景</li>
+                    <li>代码简洁，符合 Python 风格</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="reduce" class="method-card">
+            <h2>4. functools.reduce()</h2>
+            <div class="badge">函数式编程</div>
+            <div class="content">
+                <h3>适用情形</h3>
+                <p>适用于函数式编程风格，或需要自定义累积操作的场景。</p>
+                
+                <h3>使用方法</h3>
+                <pre><code class="language-python">from functools import reduce
+reduce(function, iterable, initializer)</code></pre>
+                
+                <h3>示例代码</h3>
+                <pre><code class="language-python">from functools import reduce
+
+# 基本用法：求和
+numbers = [1, 2, 3, 4, 5]
+result = reduce(lambda x, y: x + y, numbers)
+print(result)  # 输出：15
+
+# 带初始值
+result = reduce(lambda x, y: x + y, numbers, 10)
+print(result)  # 输出：25
+
+# 使用 operator.add 替代 lambda
+import operator
+result = reduce(operator.add, numbers)
+print(result)  # 输出：15
+
+# 自定义累积操作：乘积
+product = reduce(lambda x, y: x * y, numbers)
+print(product)  # 输出：120
+
+# 连接字符串
+words = ["Hello", " ", "World", "!"]
+sentence = reduce(lambda x, y: x + y, words)
+print(sentence)  # 输出：Hello World!
+
+# 扁平化嵌套列表
+nested = [[1, 2], [3, 4], [5, 6]]
+flat = reduce(lambda x, y: x + y, nested)
+print(flat)  # 输出：[1, 2, 3, 4, 5, 6]</code></pre>
+
+                <h3>注意事项</h3>
+                <ul>
+                    <li>需要从 functools 模块导入</li>
+                    <li>Python 3 中 reduce 不再是内置函数</li>
+                    <li>对于简单求和，sum() 更简洁易读</li>
+                    <li>适合复杂的累积计算场景</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="accumulate" class="method-card">
+            <h2>5. itertools.accumulate()</h2>
+            <div class="badge">累积计算</div>
+            <div class="content">
+                <h3>适用情形</h3>
+                <p>适用于需要获取累积过程结果的场景，返回每次累积的中间值。</p>
+                
+                <h3>使用方法</h3>
+                <pre><code class="language-python">from itertools import accumulate
+accumulate(iterable, func=None)</code></pre>
+                
+                <h3>示例代码</h3>
+                <pre><code class="language-python">from itertools import accumulate
+
+# 获取累积和（返回迭代器）
+numbers = [1, 2, 3, 4, 5]
+accumulated = list(accumulate(numbers))
+print(accumulated)  # 输出：[1, 3, 6, 10, 15]
+
+# 获取最终结果
+final_sum = list(accumulate(numbers))[-1]
+print(final_sum)  # 输出：15
+
+# 使用自定义函数
+import operator
+products = list(accumulate(numbers, operator.mul))
+print(products)  # 输出：[1, 2, 6, 24, 120]
+
+# 累积最大值
+numbers = [1, 5, 2, 8, 3, 9]
+max_so_far = list(accumulate(numbers, max))
+print(max_so_far)  # 输出：[1, 5, 5, 8, 8, 9]
+
+# 带初始值（Python 3.8+）
+numbers = [1, 2, 3]
+accumulated = list(accumulate(numbers, initial=10))
+print(accumulated)  # 输出：[10, 11, 13, 16]</code></pre>
+
+                <h3>注意事项</h3>
+                <ul>
+                    <li>返回的是迭代器，需要转换为列表或其他可消费形式</li>
+                    <li>主要用途是获取累积过程，而非最终求和结果</li>
+                    <li>支持自定义二元函数</li>
+                    <li>Python 3.8+ 支持 initial 参数</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="fsum" class="method-card">
+            <h2>6. math.fsum()</h2>
+            <div class="badge">高精度</div>
+            <div class="content">
+                <h3>适用情形</h3>
+                <p>适用于需要高精度浮点数求和的场景，避免浮点数精度丢失问题。</p>
+                
+                <h3>使用方法</h3>
+                <pre><code class="language-python">import math
+math.fsum(iterable)</code></pre>
+                
+                <h3>示例代码</h3>
+                <pre><code class="language-python">import math
+
+# 浮点数高精度求和
+numbers = [0.1] * 10
+print(sum(numbers))      # 输出：0.9999999999999999
+print(math.fsum(numbers))  # 输出：1.0
+
+# 大数和小数混合求和
+numbers = [1e16, 1, -1e16]
+print(sum(numbers))      # 输出：0.0（精度丢失）
+print(math.fsum(numbers))  # 输出：1.0（精确结果）
+
+# 小数累加
+numbers = [0.1, 0.2, 0.3]
+print(sum(numbers))      # 输出：0.6000000000000001
+print(math.fsum(numbers))  # 输出：0.6
+
+# 实际应用：金额计算
+prices = [19.99, 29.99, 39.99, 49.99]
+total = math.fsum(prices)
+print(f"总计：${total:.2f}")  # 输出：总计：$139.96</code></pre>
+
+                <h3>注意事项</h3>
+                <ul>
+                    <li>使用高精度算法，避免浮点数误差累积</li>
+                    <li>性能比 sum() 稍慢</li>
+                    <li>只适用于浮点数求和</li>
+                    <li>财务计算、科学计算等对精度要求高的场景推荐使用</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="recursion" class="method-card">
+            <h2>7. 递归求和</h2>
+            <div class="badge">教学用途</div>
+            <div class="content">
+                <h3>适用情形</h3>
+                <p>主要用于教学和演示递归概念，实际应用中不推荐（效率和栈深度限制）。</p>
+                
+                <h3>使用方法</h3>
+                <pre><code class="language-python">def recursive_sum(lst):
+    if not lst:
+        return 0
+    return lst[0] + recursive_sum(lst[1:])</code></pre>
+                
+                <h3>示例代码</h3>
+                <pre><code class="language-python"># 基本递归实现
+def recursive_sum(lst):
+    if not lst:
+        return 0
+    return lst[0] + recursive_sum(lst[1:])
+
+numbers = [1, 2, 3, 4, 5]
+print(recursive_sum(numbers))  # 输出：15
+
+# 尾递归优化（Python 不优化尾递归）
+def tail_recursive_sum(lst, acc=0):
+    if not lst:
+        return acc
+    return tail_recursive_sum(lst[1:], acc + lst[0])
+
+print(tail_recursive_sum(numbers))  # 输出：15
+
+# 使用索引避免切片（更高效）
+def index_recursive_sum(lst, idx=0):
+    if idx >= len(lst):
+        return 0
+    return lst[idx] + index_recursive_sum(lst, idx + 1)
+
+print(index_recursive_sum(numbers))  # 输出：15
+
+# 分治递归
+def divide_conquer_sum(lst):
+    if len(lst) == 0:
+        return 0
+    if len(lst) == 1:
+        return lst[0]
+    mid = len(lst) // 2
+    return divide_conquer_sum(lst[:mid]) + divide_conquer_sum(lst[mid:])
+
+print(divide_conquer_sum(numbers))  # 输出：15
+
+# 递归求和嵌套列表
+def nested_sum(lst):
+    total = 0
+    for item in lst:
+        if isinstance(item, list):
+            total += nested_sum(item)
+        else:
+            total += item
+    return total
+
+nested = [1, [2, 3], [4, [5, 6]]]
+print(nested_sum(nested))  # 输出：21</code></pre>
+
+                <h3>注意事项</h3>
+                <ul>
+                    <li>Python 有递归深度限制（默认约 1000 层）</li>
+                    <li>效率低于迭代方法</li>
+                    <li>主要用于教学和演示</li>
+                    <li>处理大数据集时可能导致栈溢出</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="numpy" class="method-card">
+            <h2>8. NumPy 求和</h2>
+            <div class="badge">科学计算</div>
+            <div class="content">
+                <h3>适用情形</h3>
+                <p>适用于大规模数值计算、多维数组求和，性能优异。</p>
+                
+                <h3>使用方法</h3>
+                <pre><code class="language-python">import numpy as np
+np.sum(array, axis=None, dtype=None, keepdims=False)</code></pre>
+                
+                <h3>示例代码</h3>
+                <pre><code class="language-python">import numpy as np
+
+# 一维数组求和
+arr = np.array([1, 2, 3, 4, 5])
+print(np.sum(arr))  # 输出：15
+
+# 二维数组求和
+matrix = np.array([[1, 2, 3], [4, 5, 6]])
+print(np.sum(matrix))  # 输出：21（所有元素）
+
+# 按轴求和
+print(np.sum(matrix, axis=0))  # 输出：[5 7 9]（按列）
+print(np.sum(matrix, axis=1))  # 输出：[6 15]（按行）
+
+# 保持维度
+result = np.sum(matrix, axis=1, keepdims=True)
+print(result)  # 输出：[[6], [15]]
+
+# 指定数据类型
+arr = np.array([1, 2, 3], dtype=np.float32)
+print(np.sum(arr, dtype=np.float64))  # 输出：6.0
+
+# 条件求和
+arr = np.array([1, 2, 3, 4, 5])
+print(np.sum(arr[arr > 2]))  # 输出：12 (3+4+5)
+
+# 加权求和
+values = np.array([1, 2, 3, 4])
+weights = np.array([0.1, 0.2, 0.3, 0.4])
+print(np.sum(values * weights))  # 输出：3.0
+
+# 大规模数组性能测试
+large_arr = np.random.rand(1000000)
+print(np.sum(large_arr))  # 快速计算</code></pre>
+
+                <h3>注意事项</h3>
+                <ul>
+                    <li>需要安装 NumPy 库：pip install numpy</li>
+                    <li>对大规模数据性能极佳</li>
+                    <li>支持多维数组和轴操作</li>
+                    <li>底层使用 C 实现，速度快</li>
+                    <li>科学计算和数据分析的首选</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="pandas" class="method-card">
+            <h2>9. Pandas 求和</h2>
+            <div class="badge">数据分析</div>
+            <div class="content">
+                <h3>适用情形</h3>
+                <p>适用于数据分析场景，对 Series 和 DataFrame 进行求和，自动处理缺失值。</p>
+                
+                <h3>使用方法</h3>
+                <pre><code class="language-python">import pandas as pd
+series.sum()
+dataframe.sum(axis=0, skipna=True)</code></pre>
+                
+                <h3>示例代码</h3>
+                <pre><code class="language-python">import pandas as pd
+
+# Series 求和
+s = pd.Series([1, 2, 3, 4, 5])
+print(s.sum())  # 输出：15
+
+# 带缺失值的 Series
+s = pd.Series([1, 2, None, 4, 5])
+print(s.sum())  # 输出：12（自动跳过 NaN）
+
+# DataFrame 按列求和
+df = pd.DataFrame({
+    'A': [1, 2, 3],
+    'B': [4, 5, 6],
+    'C': [7, 8, 9]
+})
+print(df.sum())  # 输出：A: 6, B: 15, C: 24
+
+# DataFrame 按行求和
+print(df.sum(axis=1))  # 输出：[12, 15, 18]
+
+# 条件求和
+df = pd.DataFrame({
+    'name': ['Alice', 'Bob', 'Charlie'],
+    'age': [25, 30, 35],
+    'salary': [50000, 60000, 70000]
+})
+print(df['salary'].sum())  # 输出：180000
+
+# 分组求和
+df = pd.DataFrame({
+    'department': ['HR', 'IT', 'HR', 'IT', 'HR'],
+    'salary': [5000, 8000, 6000, 9000, 5500]
+})
+print(df.groupby('department')['salary'].sum())
+# 输出：HR: 16500, IT: 17000
+
+# 多列求和
+print(df[['age', 'salary']].sum())
+
+# 实际应用：销售数据统计
+sales = pd.DataFrame({
+    'product': ['A', 'B', 'A', 'B', 'A'],
+    'quantity': [10, 20, 15, 25, 30],
+    'price': [100, 150, 100, 150, 100]
+})
+sales['total'] = sales['quantity'] * sales['price']
+print(f"总销售额：{sales['total'].sum()}")  # 输出：10000</code></pre>
+
+                <h3>注意事项</h3>
+                <ul>
+                    <li>需要安装 Pandas：pip install pandas</li>
+                    <li>自动处理缺失值（NaN）</li>
+                    <li>适合结构化数据的统计分析</li>
+                    <li>支持分组、聚合等高级操作</li>
+                    <li>数据分析领域的标准工具</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="parallel" class="method-card">
+            <h2>10. 并行分块求和</h2>
+            <div class="badge">高性能</div>
+            <div class="content">
+                <h3>适用情形</h3>
+                <p>适用于超大规模数据集的求和，利用多核 CPU 并行计算提升性能。</p>
+                
+                <h3>使用方法</h3>
+                <pre><code class="language-python"># 使用 multiprocessing 或 concurrent.futures
+from concurrent.futures import ProcessPoolExecutor</code></pre>
+                
+                <h3>示例代码</h3>
+                <pre><code class="language-python"># 方法 1：使用 multiprocessing
+from multiprocessing import Pool
+
+def chunk_sum(chunk):
+    return sum(chunk)
+
+def parallel_sum(data, num_processes=4):
+    chunk_size = len(data) // num_processes
+    chunks = [data[i:i + chunk_size] 
+              for i in range(0, len(data), chunk_size)]
+    
+    with Pool(num_processes) as pool:
+        results = pool.map(chunk_sum, chunks)
+    
+    return sum(results)
+
+# 测试
+import random
+large_data = [random.randint(1, 100) for _ in range(1000000)]
+result = parallel_sum(large_data)
+print(f"并行求和结果：{result}")
+
+# 方法 2：使用 concurrent.futures
+from concurrent.futures import ProcessPoolExecutor
+
+def parallel_sum_v2(data, num_processes=4):
+    chunk_size = len(data) // num_processes
+    chunks = [data[i:i + chunk_size] 
+              for i in range(0, len(data), chunk_size)]
+    
+    with ProcessPoolExecutor(max_workers=num_processes) as executor:
+        results = list(executor.map(chunk_sum, chunks))
+    
+    return sum(results)
+
+# 方法 3：使用 NumPy 并行求和
+import numpy as np
+
+def numpy_parallel_sum(data, num_chunks=4):
+    arr = np.array(data)
+    chunks = np.array_split(arr, num_chunks)
+    
+    # 并行计算每个块的和
+    from multiprocessing import Pool
+    with Pool(num_chunks) as pool:
+        partial_sums = pool.map(np.sum, chunks)
+    
+    return sum(partial_sums)
+
+# 方法 4：使用 joblib
+from joblib import Parallel, delayed
+
+def joblib_parallel_sum(data, num_processes=4):
+    chunk_size = len(data) // num_processes
+    chunks = [data[i:i + chunk_size] 
+              for i in range(0, len(data), chunk_size)]
+    
+    partial_sums = Parallel(n_jobs=num_processes)(
+        delayed(sum)(chunk) for chunk in chunks
+    )
+    
+    return sum(partial_sums)
+
+# 性能对比示例
+import time
+
+def benchmark():
+    data = list(range(10000000))
+    
+    # 串行求和
+    start = time.time()
+    result1 = sum(data)
+    print(f"串行时间：{time.time() - start:.4f}秒")
+    
+    # 并行求和
+    start = time.time()
+    result2 = parallel_sum(data)
+    print(f"并行时间：{time.time() - start:.4f}秒")</code></pre>
+
+                <h3>注意事项</h3>
+                <ul>
+                    <li>适用于超大规模数据集（百万级以上）</li>
+                    <li>进程创建有开销，小数据集反而更慢</li>
+                    <li>需要安装 joblib：pip install joblib（可选）</li>
+                    <li>多进程而非多线程（避免 GIL 限制）</li>
+                    <li>根据 CPU 核心数调整进程数</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Python 求和方法知识库 | 部署于 GitHub Pages</p>
+        <div class="github-link">
+            <a href="https://github.com/yourusername/python-sum-methods" target="_blank">
+                📦 在 GitHub 上查看
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 代码高亮（简单实现）
+        document.querySelectorAll('code').forEach(block => {
+            block.classList.add('highlighted');
+        });
+    </script>
+</body>
+</html>
