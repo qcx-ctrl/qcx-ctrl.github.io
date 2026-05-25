@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2021-2025 春节档电影数据分析</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px 15px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .card-title {
+            color: #333;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #667eea;
+        }
+        .chart-wrapper {
+            text-align: center;
+            margin: 15px 0;
+        }
+        .chart-wrapper img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            padding: 18px;
+            color: white;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 10px 8px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+        }
+        tr:hover { background: #f8f9fa; }
+        .highlight-row { background: #fff3cd; }
+        .key-findings {
+            list-style: none;
+            padding-left: 0;
+        }
+        .key-findings li {
+            padding: 10px 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .key-findings li::before {
+            content: '✓';
+            color: #28a745;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .trend-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .trend-item {
+            padding: 16px;
+            border-radius: 10px;
+        }
+        .trend-box-office { background: #e3f2fd; }
+        .trend-box-rating { background: #fff3e0; }
+        .trend-title { font-weight: bold; margin-bottom: 8px; }
+        .trend-office { color: #1976d2; }
+        .trend-rating { color: #f57c00; }
+        .up-arrow { color: #28a745; font-weight: bold; }
+        .director-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .director-tag {
+            background: #e9ecef;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+        footer {
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            font-size: 13px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 2021-2025 春节档电影数据分析</h1>
+        <p class="subtitle">年度票房趋势 · 豆瓣评分分析 · 线性回归预测</p>
+        
+        <div class="card">
+            <div class="card-title">📊 综合数据分析图表</div>
+            <div class="chart-wrapper">
+                <img src="spring_festival_analysis.png" alt="春节档综合分析图表">
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">🏆 票房冠军对比图表</div>
+            <div class="chart-wrapper">
+                <img src="top_movie_analysis.png" alt="票房冠军对比图表">
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">📈 年度数据概览</div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">115.95亿</div>
+                    <div class="stat-label">最高年度票房 (2025)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">6.81分</div>
+                    <div class="stat-label">最高平均评分 (2024)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">9.52亿/年</div>
+                    <div class="stat-label">票房年均增长</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">+0.09分</div>
+                    <div class="stat-label">评分年均变化</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">🎬 历年票房冠军详情</div>
+            <table>
+                <thead>
+                    <tr><th>年份</th><th>电影名称</th><th>导演</th><th>票房(亿)</th><th>评分</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>2021</td><td>你好，李焕英</td><td>贾玲</td><td>54.13</td><td>7.8</td></tr>
+                    <tr><td>2022</td><td>长津湖之水门桥</td><td>徐克</td><td>40.67</td><td>7.0</td></tr>
+                    <tr><td>2023</td><td>满江红</td><td>张艺谋</td><td>45.44</td><td>6.9</td></tr>
+                    <tr><td>2024</td><td>热辣滚烫</td><td>贾玲</td><td>34.60</td><td>7.6</td></tr>
+                    <tr class="highlight-row"><td>2025</td><td>哪吒之魔童闹海</td><td>饺子</td><td>57.75</td><td>8.5</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">📉 线性回归分析</div>
+            <div class="trend-box">
+                <div class="trend-item trend-box-office">
+                    <div class="trend-title trend-office">💰 票房趋势</div>
+                    <div>方程: <strong>y = 9.52x - 19186.59</strong></div>
+                    <div>R² = <strong>0.4947</strong></div>
+                    <div class="up-arrow">↑ 年均增长 9.52 亿元</div>
+                </div>
+                <div class="trend-item trend-box-rating">
+                    <div class="trend-title trend-rating">⭐ 评分趋势</div>
+                    <div>方程: <strong>y = 0.09x - 177.69</strong></div>
+                    <div>R² = <strong>0.2368</strong></div>
+                    <div class="up-arrow">↑ 年均提升 0.09 分</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">🔍 关键发现</div>
+            <ul class="key-findings">
+                <li><strong>票房最高：</strong>2025年达115.95亿，《哪吒之魔童闹海》贡献最大</li>
+                <li><strong>口碑最佳：</strong>2024年平均评分6.81分，整体质量最高</li>
+                <li><strong>最低谷：</strong>2022年受疫情影响，票房仅60.38亿</li>
+                <li><strong>最佳影片：</strong>《哪吒之魔童闹海》8.5分创春节档评分纪录</li>
+                <li><strong>最成功导演：</strong>贾玲两次夺冠，市场号召力最强</li>
+                <li><strong>动画崛起：</strong>国产动画电影在春节档实现突破</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">🎥 导演统计</div>
+            <div class="director-tags">
+                <span class="director-tag">贾玲 · 2次夺冠</span>
+                <span class="director-tag">徐克 · 1次夺冠</span>
+                <span class="director-tag">张艺谋 · 1次夺冠</span>
+                <span class="director-tag">饺子 · 1次夺冠</span>
+            </div>
+        </div>
+        
+        <footer>
+            <p>数据来源：豆瓣电影 · 票房统计</p>
+            <p>© 2026 春节档电影数据分析报告</p>
+        </footer>
+    </div>
+</body>
+</html>
