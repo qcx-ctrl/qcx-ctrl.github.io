@@ -3,651 +3,1500 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python 求和方法知识库</title>
-    <link rel="stylesheet" href="static/style.css">
+    <title>大学人生模拟器</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a5f;
+            --primary-light: #2d5a87;
+            --accent: #d4af37;
+            --accent-light: #e8c84a;
+            --success: #2d7a4a;
+            --danger: #a63d3d;
+            --bg: #f5f5f0;
+            --card: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Page transitions */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Start Page */
+        .start-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            margin: -20px;
+            padding: 40px;
+        }
+
+        .game-title {
+            font-size: 3.5rem;
+            color: var(--accent);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            animation: titleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .game-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 50px;
+            max-width: 500px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-light);
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-light);
+        }
+
+        .btn-choice {
+            width: 100%;
+            padding: 18px 24px;
+            text-align: left;
+            background: var(--card);
+            border: 2px solid #e0e0e0;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            font-size: 1rem;
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .btn-choice:hover {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, #fff 0%, #fefcf5 100%);
+            transform: translateX(5px);
+        }
+
+        .btn-choice.positive:hover {
+            border-color: var(--success);
+        }
+
+        .btn-choice.negative:hover {
+            border-color: var(--danger);
+        }
+
+        /* Create Page */
+        .create-page {
+            padding-top: 40px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Noto Sans SC', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .radio-item input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+        }
+
+        .select-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Noto Sans SC', sans-serif;
+            background: white;
+            cursor: pointer;
+        }
+
+        .select-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Game Page */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 16px 24px;
+            background: var(--primary);
+            border-radius: 12px;
+            color: white;
+        }
+
+        .player-info {
+            font-size: 1.1rem;
+        }
+
+        .player-name {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .time-info {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .attributes-panel {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .attr-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        .attr-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .attr-name {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .attr-value {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .attr-value.high {
+            color: var(--success);
+        }
+
+        .attr-value.medium {
+            color: var(--accent);
+        }
+
+        .attr-value.low {
+            color: var(--danger);
+        }
+
+        .attr-bar {
+            height: 8px;
+            background: #e8e8e8;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .attr-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease, background-color 0.3s;
+        }
+
+        .attr-fill.high {
+            background: linear-gradient(90deg, var(--success) 0%, #4ade80 100%);
+        }
+
+        .attr-fill.medium {
+            background: linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%);
+        }
+
+        .attr-fill.low {
+            background: linear-gradient(90deg, var(--danger) 0%, #ef4444 100%);
+        }
+
+        .event-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .event-round {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+
+        .event-title {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .event-description {
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .event-choices {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .point-change {
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .point-change.positive {
+            color: var(--success);
+        }
+
+        .point-change.negative {
+            color: var(--danger);
+        }
+
+        /* Semester End Page */
+        .semester-end {
+            text-align: center;
+            padding-top: 40px;
+        }
+
+        .semester-title {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .semester-subtitle {
+            color: var(--text-light);
+            margin-bottom: 40px;
+        }
+
+        .radar-container {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .summary-text {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+            color: var(--text);
+        }
+
+        /* Graduation Page */
+        .graduation {
+            text-align: center;
+            padding-top: 40px;
+        }
+
+        .grade-badge {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: 700;
+            color: white;
+            margin: 0 auto 30px;
+            animation: gradeReveal 1s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        @keyframes gradeReveal {
+            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .grade-s { background: linear-gradient(135deg, #d4af37 0%, #f5d76e 100%); }
+        .grade-a { background: linear-gradient(135deg, #2d7a4a 0%, #4ade80 100%); }
+        .grade-b { background: linear-gradient(135deg, #2d5a87 0%, #60a5fa 100%); }
+        .grade-c { background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%); }
+        .grade-d { background: linear-gradient(135deg, #b45309 0%, #f59e0b 100%); }
+        .grade-e { background: linear-gradient(135deg, #a63d3d 0%, #ef4444 100%); }
+
+        .grade-title {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .grade-description {
+            color: var(--text-light);
+            margin-bottom: 40px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .final-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        .history-section {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .history-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-event {
+            color: var(--text);
+        }
+
+        .history-change {
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .game-title {
+                font-size: 2.5rem;
+            }
+
+            .attributes-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .final-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .radar-container {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>🐍 Python 求和方法知识库</h1>
-        <p class="subtitle">全面收录 Python 中的各种求和方法与技巧</p>
-    </header>
-
-    <nav>
-        <ul>
-            <li><a href="#sum">内置函数 sum</a></li>
-            <li><a href="#loop">循环累加</a></li>
-            <li><a href="#comprehension">推导式 + sum</a></li>
-            <li><a href="#reduce">functools.reduce</a></li>
-            <li><a href="#accumulate">itertools.accumulate</a></li>
-            <li><a href="#fsum">math.fsum</a></li>
-            <li><a href="#recursion">递归求和</a></li>
-            <li><a href="#numpy">NumPy 求和</a></li>
-            <li><a href="#pandas">Pandas 求和</a></li>
-            <li><a href="#parallel">并行分块求和</a></li>
-        </ul>
-    </nav>
-
-    <main>
-        <section id="sum" class="method-card">
-            <h2>1. 内置函数 sum()</h2>
-            <div class="badge">最常用</div>
-            <div class="content">
-                <h3>适用情形</h3>
-                <p>适用于对可迭代对象（列表、元组、集合等）进行简单求和，是最 Pythonic 的方式。</p>
-                
-                <h3>使用方法</h3>
-                <pre><code class="language-python">sum(iterable, start=0)</code></pre>
-                
-                <h3>示例代码</h3>
-                <pre><code class="language-python"># 基本用法
-numbers = [1, 2, 3, 4, 5]
-result = sum(numbers)
-print(result)  # 输出：15
-
-# 带初始值
-result = sum(numbers, 10)
-print(result)  # 输出：25
-
-# 对元组求和
-numbers_tuple = (10, 20, 30)
-print(sum(numbers_tuple))  # 输出：60
-
-# 对集合求和
-numbers_set = {1, 2, 3, 4}
-print(sum(numbers_set))  # 输出：10</code></pre>
-
-                <h3>注意事项</h3>
-                <ul>
-                    <li>第二个参数 start 是可选的，默认为 0</li>
-                    <li>不能用于字符串连接（会抛出 TypeError）</li>
-                    <li>对于浮点数可能存在精度问题，此时可用 math.fsum()</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="loop" class="method-card">
-            <h2>2. 循环累加</h2>
-            <div class="badge">基础方法</div>
-            <div class="content">
-                <h3>适用情形</h3>
-                <p>适用于需要在求和过程中添加额外逻辑的场景，如条件过滤、转换等。</p>
-                
-                <h3>使用方法</h3>
-                <pre><code class="language-python">total = 0
-for item in iterable:
-    total += item</code></pre>
-                
-                <h3>示例代码</h3>
-                <pre><code class="language-python"># 基本循环累加
-numbers = [1, 2, 3, 4, 5]
-total = 0
-for num in numbers:
-    total += num
-print(total)  # 输出：15
-
-# 带条件过滤的累加
-numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-even_sum = 0
-for num in numbers:
-    if num % 2 == 0:
-        even_sum += num
-print(even_sum)  # 输出：30 (2+4+6+8+10)
-
-# 累加时进行转换
-numbers = ["1", "2", "3", "4", "5"]
-total = 0
-for num_str in numbers:
-    total += int(num_str)
-print(total)  # 输出：15
-
-# 使用 while 循环
-numbers = [1, 2, 3, 4, 5]
-total = 0
-i = 0
-while i < len(numbers):
-    total += numbers[i]
-    i += 1
-print(total)  # 输出：15</code></pre>
-
-                <h3>注意事项</h3>
-                <ul>
-                    <li>最灵活的方法，可以在累加过程中添加任意逻辑</li>
-                    <li>代码量相对较多，但可读性好</li>
-                    <li>适合初学者理解求和的本质</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="comprehension" class="method-card">
-            <h2>3. 推导式 + sum()</h2>
-            <div class="badge">推荐</div>
-            <div class="content">
-                <h3>适用情形</h3>
-                <p>适用于需要先对数据进行过滤或转换后再求和的场景，代码简洁优雅。</p>
-                
-                <h3>使用方法</h3>
-                <pre><code class="language-python">sum(expression for item in iterable if condition)
-sum([expression for item in iterable])</code></pre>
-                
-                <h3>示例代码</h3>
-                <pre><code class="language-python"># 生成器表达式 + sum（推荐，内存效率高）
-numbers = [1, 2, 3, 4, 5]
-result = sum(x * 2 for x in numbers)
-print(result)  # 输出：30
-
-# 带条件的生成器表达式
-numbers = range(1, 11)
-even_sum = sum(x for x in numbers if x % 2 == 0)
-print(even_sum)  # 输出：30
-
-# 列表推导式 + sum
-numbers = [1, 2, 3, 4, 5]
-squares_sum = sum([x**2 for x in numbers])
-print(squares_sum)  # 输出：55 (1+4+9+16+25)
-
-# 嵌套推导式求和
-matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-total = sum(num for row in matrix for num in row)
-print(total)  # 输出：45
-
-# 字典推导式求和
-prices = {"apple": 1.5, "banana": 0.8, "orange": 1.2}
-total = sum(price for price in prices.values())
-print(total)  # 输出：3.5
-
-# 字符串长度求和
-words = ["python", "java", "javascript"]
-total_length = sum(len(word) for word in words)
-print(total_length)  # 输出：17</code></pre>
-
-                <h3>注意事项</h3>
-                <ul>
-                    <li>生成器表达式（圆括号）比列表推导式（方括号）更节省内存</li>
-                    <li>适合复杂的数据处理和过滤场景</li>
-                    <li>代码简洁，符合 Python 风格</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="reduce" class="method-card">
-            <h2>4. functools.reduce()</h2>
-            <div class="badge">函数式编程</div>
-            <div class="content">
-                <h3>适用情形</h3>
-                <p>适用于函数式编程风格，或需要自定义累积操作的场景。</p>
-                
-                <h3>使用方法</h3>
-                <pre><code class="language-python">from functools import reduce
-reduce(function, iterable, initializer)</code></pre>
-                
-                <h3>示例代码</h3>
-                <pre><code class="language-python">from functools import reduce
-
-# 基本用法：求和
-numbers = [1, 2, 3, 4, 5]
-result = reduce(lambda x, y: x + y, numbers)
-print(result)  # 输出：15
-
-# 带初始值
-result = reduce(lambda x, y: x + y, numbers, 10)
-print(result)  # 输出：25
-
-# 使用 operator.add 替代 lambda
-import operator
-result = reduce(operator.add, numbers)
-print(result)  # 输出：15
-
-# 自定义累积操作：乘积
-product = reduce(lambda x, y: x * y, numbers)
-print(product)  # 输出：120
-
-# 连接字符串
-words = ["Hello", " ", "World", "!"]
-sentence = reduce(lambda x, y: x + y, words)
-print(sentence)  # 输出：Hello World!
-
-# 扁平化嵌套列表
-nested = [[1, 2], [3, 4], [5, 6]]
-flat = reduce(lambda x, y: x + y, nested)
-print(flat)  # 输出：[1, 2, 3, 4, 5, 6]</code></pre>
-
-                <h3>注意事项</h3>
-                <ul>
-                    <li>需要从 functools 模块导入</li>
-                    <li>Python 3 中 reduce 不再是内置函数</li>
-                    <li>对于简单求和，sum() 更简洁易读</li>
-                    <li>适合复杂的累积计算场景</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="accumulate" class="method-card">
-            <h2>5. itertools.accumulate()</h2>
-            <div class="badge">累积计算</div>
-            <div class="content">
-                <h3>适用情形</h3>
-                <p>适用于需要获取累积过程结果的场景，返回每次累积的中间值。</p>
-                
-                <h3>使用方法</h3>
-                <pre><code class="language-python">from itertools import accumulate
-accumulate(iterable, func=None)</code></pre>
-                
-                <h3>示例代码</h3>
-                <pre><code class="language-python">from itertools import accumulate
-
-# 获取累积和（返回迭代器）
-numbers = [1, 2, 3, 4, 5]
-accumulated = list(accumulate(numbers))
-print(accumulated)  # 输出：[1, 3, 6, 10, 15]
-
-# 获取最终结果
-final_sum = list(accumulate(numbers))[-1]
-print(final_sum)  # 输出：15
-
-# 使用自定义函数
-import operator
-products = list(accumulate(numbers, operator.mul))
-print(products)  # 输出：[1, 2, 6, 24, 120]
-
-# 累积最大值
-numbers = [1, 5, 2, 8, 3, 9]
-max_so_far = list(accumulate(numbers, max))
-print(max_so_far)  # 输出：[1, 5, 5, 8, 8, 9]
-
-# 带初始值（Python 3.8+）
-numbers = [1, 2, 3]
-accumulated = list(accumulate(numbers, initial=10))
-print(accumulated)  # 输出：[10, 11, 13, 16]</code></pre>
-
-                <h3>注意事项</h3>
-                <ul>
-                    <li>返回的是迭代器，需要转换为列表或其他可消费形式</li>
-                    <li>主要用途是获取累积过程，而非最终求和结果</li>
-                    <li>支持自定义二元函数</li>
-                    <li>Python 3.8+ 支持 initial 参数</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="fsum" class="method-card">
-            <h2>6. math.fsum()</h2>
-            <div class="badge">高精度</div>
-            <div class="content">
-                <h3>适用情形</h3>
-                <p>适用于需要高精度浮点数求和的场景，避免浮点数精度丢失问题。</p>
-                
-                <h3>使用方法</h3>
-                <pre><code class="language-python">import math
-math.fsum(iterable)</code></pre>
-                
-                <h3>示例代码</h3>
-                <pre><code class="language-python">import math
-
-# 浮点数高精度求和
-numbers = [0.1] * 10
-print(sum(numbers))      # 输出：0.9999999999999999
-print(math.fsum(numbers))  # 输出：1.0
-
-# 大数和小数混合求和
-numbers = [1e16, 1, -1e16]
-print(sum(numbers))      # 输出：0.0（精度丢失）
-print(math.fsum(numbers))  # 输出：1.0（精确结果）
-
-# 小数累加
-numbers = [0.1, 0.2, 0.3]
-print(sum(numbers))      # 输出：0.6000000000000001
-print(math.fsum(numbers))  # 输出：0.6
-
-# 实际应用：金额计算
-prices = [19.99, 29.99, 39.99, 49.99]
-total = math.fsum(prices)
-print(f"总计：${total:.2f}")  # 输出：总计：$139.96</code></pre>
-
-                <h3>注意事项</h3>
-                <ul>
-                    <li>使用高精度算法，避免浮点数误差累积</li>
-                    <li>性能比 sum() 稍慢</li>
-                    <li>只适用于浮点数求和</li>
-                    <li>财务计算、科学计算等对精度要求高的场景推荐使用</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="recursion" class="method-card">
-            <h2>7. 递归求和</h2>
-            <div class="badge">教学用途</div>
-            <div class="content">
-                <h3>适用情形</h3>
-                <p>主要用于教学和演示递归概念，实际应用中不推荐（效率和栈深度限制）。</p>
-                
-                <h3>使用方法</h3>
-                <pre><code class="language-python">def recursive_sum(lst):
-    if not lst:
-        return 0
-    return lst[0] + recursive_sum(lst[1:])</code></pre>
-                
-                <h3>示例代码</h3>
-                <pre><code class="language-python"># 基本递归实现
-def recursive_sum(lst):
-    if not lst:
-        return 0
-    return lst[0] + recursive_sum(lst[1:])
-
-numbers = [1, 2, 3, 4, 5]
-print(recursive_sum(numbers))  # 输出：15
-
-# 尾递归优化（Python 不优化尾递归）
-def tail_recursive_sum(lst, acc=0):
-    if not lst:
-        return acc
-    return tail_recursive_sum(lst[1:], acc + lst[0])
-
-print(tail_recursive_sum(numbers))  # 输出：15
-
-# 使用索引避免切片（更高效）
-def index_recursive_sum(lst, idx=0):
-    if idx >= len(lst):
-        return 0
-    return lst[idx] + index_recursive_sum(lst, idx + 1)
-
-print(index_recursive_sum(numbers))  # 输出：15
-
-# 分治递归
-def divide_conquer_sum(lst):
-    if len(lst) == 0:
-        return 0
-    if len(lst) == 1:
-        return lst[0]
-    mid = len(lst) // 2
-    return divide_conquer_sum(lst[:mid]) + divide_conquer_sum(lst[mid:])
-
-print(divide_conquer_sum(numbers))  # 输出：15
-
-# 递归求和嵌套列表
-def nested_sum(lst):
-    total = 0
-    for item in lst:
-        if isinstance(item, list):
-            total += nested_sum(item)
-        else:
-            total += item
-    return total
-
-nested = [1, [2, 3], [4, [5, 6]]]
-print(nested_sum(nested))  # 输出：21</code></pre>
-
-                <h3>注意事项</h3>
-                <ul>
-                    <li>Python 有递归深度限制（默认约 1000 层）</li>
-                    <li>效率低于迭代方法</li>
-                    <li>主要用于教学和演示</li>
-                    <li>处理大数据集时可能导致栈溢出</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="numpy" class="method-card">
-            <h2>8. NumPy 求和</h2>
-            <div class="badge">科学计算</div>
-            <div class="content">
-                <h3>适用情形</h3>
-                <p>适用于大规模数值计算、多维数组求和，性能优异。</p>
-                
-                <h3>使用方法</h3>
-                <pre><code class="language-python">import numpy as np
-np.sum(array, axis=None, dtype=None, keepdims=False)</code></pre>
-                
-                <h3>示例代码</h3>
-                <pre><code class="language-python">import numpy as np
-
-# 一维数组求和
-arr = np.array([1, 2, 3, 4, 5])
-print(np.sum(arr))  # 输出：15
-
-# 二维数组求和
-matrix = np.array([[1, 2, 3], [4, 5, 6]])
-print(np.sum(matrix))  # 输出：21（所有元素）
-
-# 按轴求和
-print(np.sum(matrix, axis=0))  # 输出：[5 7 9]（按列）
-print(np.sum(matrix, axis=1))  # 输出：[6 15]（按行）
-
-# 保持维度
-result = np.sum(matrix, axis=1, keepdims=True)
-print(result)  # 输出：[[6], [15]]
-
-# 指定数据类型
-arr = np.array([1, 2, 3], dtype=np.float32)
-print(np.sum(arr, dtype=np.float64))  # 输出：6.0
-
-# 条件求和
-arr = np.array([1, 2, 3, 4, 5])
-print(np.sum(arr[arr > 2]))  # 输出：12 (3+4+5)
-
-# 加权求和
-values = np.array([1, 2, 3, 4])
-weights = np.array([0.1, 0.2, 0.3, 0.4])
-print(np.sum(values * weights))  # 输出：3.0
-
-# 大规模数组性能测试
-large_arr = np.random.rand(1000000)
-print(np.sum(large_arr))  # 快速计算</code></pre>
-
-                <h3>注意事项</h3>
-                <ul>
-                    <li>需要安装 NumPy 库：pip install numpy</li>
-                    <li>对大规模数据性能极佳</li>
-                    <li>支持多维数组和轴操作</li>
-                    <li>底层使用 C 实现，速度快</li>
-                    <li>科学计算和数据分析的首选</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="pandas" class="method-card">
-            <h2>9. Pandas 求和</h2>
-            <div class="badge">数据分析</div>
-            <div class="content">
-                <h3>适用情形</h3>
-                <p>适用于数据分析场景，对 Series 和 DataFrame 进行求和，自动处理缺失值。</p>
-                
-                <h3>使用方法</h3>
-                <pre><code class="language-python">import pandas as pd
-series.sum()
-dataframe.sum(axis=0, skipna=True)</code></pre>
-                
-                <h3>示例代码</h3>
-                <pre><code class="language-python">import pandas as pd
-
-# Series 求和
-s = pd.Series([1, 2, 3, 4, 5])
-print(s.sum())  # 输出：15
-
-# 带缺失值的 Series
-s = pd.Series([1, 2, None, 4, 5])
-print(s.sum())  # 输出：12（自动跳过 NaN）
-
-# DataFrame 按列求和
-df = pd.DataFrame({
-    'A': [1, 2, 3],
-    'B': [4, 5, 6],
-    'C': [7, 8, 9]
-})
-print(df.sum())  # 输出：A: 6, B: 15, C: 24
-
-# DataFrame 按行求和
-print(df.sum(axis=1))  # 输出：[12, 15, 18]
-
-# 条件求和
-df = pd.DataFrame({
-    'name': ['Alice', 'Bob', 'Charlie'],
-    'age': [25, 30, 35],
-    'salary': [50000, 60000, 70000]
-})
-print(df['salary'].sum())  # 输出：180000
-
-# 分组求和
-df = pd.DataFrame({
-    'department': ['HR', 'IT', 'HR', 'IT', 'HR'],
-    'salary': [5000, 8000, 6000, 9000, 5500]
-})
-print(df.groupby('department')['salary'].sum())
-# 输出：HR: 16500, IT: 17000
-
-# 多列求和
-print(df[['age', 'salary']].sum())
-
-# 实际应用：销售数据统计
-sales = pd.DataFrame({
-    'product': ['A', 'B', 'A', 'B', 'A'],
-    'quantity': [10, 20, 15, 25, 30],
-    'price': [100, 150, 100, 150, 100]
-})
-sales['total'] = sales['quantity'] * sales['price']
-print(f"总销售额：{sales['total'].sum()}")  # 输出：10000</code></pre>
-
-                <h3>注意事项</h3>
-                <ul>
-                    <li>需要安装 Pandas：pip install pandas</li>
-                    <li>自动处理缺失值（NaN）</li>
-                    <li>适合结构化数据的统计分析</li>
-                    <li>支持分组、聚合等高级操作</li>
-                    <li>数据分析领域的标准工具</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="parallel" class="method-card">
-            <h2>10. 并行分块求和</h2>
-            <div class="badge">高性能</div>
-            <div class="content">
-                <h3>适用情形</h3>
-                <p>适用于超大规模数据集的求和，利用多核 CPU 并行计算提升性能。</p>
-                
-                <h3>使用方法</h3>
-                <pre><code class="language-python"># 使用 multiprocessing 或 concurrent.futures
-from concurrent.futures import ProcessPoolExecutor</code></pre>
-                
-                <h3>示例代码</h3>
-                <pre><code class="language-python"># 方法 1：使用 multiprocessing
-from multiprocessing import Pool
-
-def chunk_sum(chunk):
-    return sum(chunk)
-
-def parallel_sum(data, num_processes=4):
-    chunk_size = len(data) // num_processes
-    chunks = [data[i:i + chunk_size] 
-              for i in range(0, len(data), chunk_size)]
-    
-    with Pool(num_processes) as pool:
-        results = pool.map(chunk_sum, chunks)
-    
-    return sum(results)
-
-# 测试
-import random
-large_data = [random.randint(1, 100) for _ in range(1000000)]
-result = parallel_sum(large_data)
-print(f"并行求和结果：{result}")
-
-# 方法 2：使用 concurrent.futures
-from concurrent.futures import ProcessPoolExecutor
-
-def parallel_sum_v2(data, num_processes=4):
-    chunk_size = len(data) // num_processes
-    chunks = [data[i:i + chunk_size] 
-              for i in range(0, len(data), chunk_size)]
-    
-    with ProcessPoolExecutor(max_workers=num_processes) as executor:
-        results = list(executor.map(chunk_sum, chunks))
-    
-    return sum(results)
-
-# 方法 3：使用 NumPy 并行求和
-import numpy as np
-
-def numpy_parallel_sum(data, num_chunks=4):
-    arr = np.array(data)
-    chunks = np.array_split(arr, num_chunks)
-    
-    # 并行计算每个块的和
-    from multiprocessing import Pool
-    with Pool(num_chunks) as pool:
-        partial_sums = pool.map(np.sum, chunks)
-    
-    return sum(partial_sums)
-
-# 方法 4：使用 joblib
-from joblib import Parallel, delayed
-
-def joblib_parallel_sum(data, num_processes=4):
-    chunk_size = len(data) // num_processes
-    chunks = [data[i:i + chunk_size] 
-              for i in range(0, len(data), chunk_size)]
-    
-    partial_sums = Parallel(n_jobs=num_processes)(
-        delayed(sum)(chunk) for chunk in chunks
-    )
-    
-    return sum(partial_sums)
-
-# 性能对比示例
-import time
-
-def benchmark():
-    data = list(range(10000000))
-    
-    # 串行求和
-    start = time.time()
-    result1 = sum(data)
-    print(f"串行时间：{time.time() - start:.4f}秒")
-    
-    # 并行求和
-    start = time.time()
-    result2 = parallel_sum(data)
-    print(f"并行时间：{time.time() - start:.4f}秒")</code></pre>
-
-                <h3>注意事项</h3>
-                <ul>
-                    <li>适用于超大规模数据集（百万级以上）</li>
-                    <li>进程创建有开销，小数据集反而更慢</li>
-                    <li>需要安装 joblib：pip install joblib（可选）</li>
-                    <li>多进程而非多线程（避免 GIL 限制）</li>
-                    <li>根据 CPU 核心数调整进程数</li>
-                </ul>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>© 2026 Python 求和方法知识库 | 部署于 GitHub Pages</p>
-        <div class="github-link">
-            <a href="https://github.com/yourusername/python-sum-methods" target="_blank">
-                📦 在 GitHub 上查看
-            </a>
+    <div class="container">
+        <!-- Start Page -->
+        <div id="startPage" class="page start-page active">
+            <h1 class="game-title">大学人生模拟器</h1>
+            <p class="game-subtitle">在大学四年中做出选择，体验不一样的人生轨迹。从学业到社交，从健康到财务，管理好你的大学生活，为未来奠定基础。</p>
+            <button class="btn btn-primary" onclick="showPage('createPage')">开始游戏</button>
         </div>
-    </footer>
+
+        <!-- Create Page -->
+        <div id="createPage" class="page create-page">
+            <h2 class="page-title">创建角色</h2>
+            <div class="form-card">
+                <div class="form-group">
+                    <label class="form-label">姓名</label>
+                    <input type="text" id="playerName" class="form-input" placeholder="输入你的名字" maxlength="10">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">性别</label>
+                    <div class="radio-group">
+                        <label class="radio-item">
+                            <input type="radio" name="gender" value="male" checked>
+                            <span>男</span>
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="gender" value="female">
+                            <span>女</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">专业</label>
+                    <select id="major" class="select-input">
+                        <option value="computer">计算机科学与技术</option>
+                        <option value="business">工商管理</option>
+                        <option value="design">艺术设计</option>
+                        <option value="journalism">新闻传播学</option>
+                        <option value="law">法学</option>
+                        <option value="medicine">临床医学</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="startGame()">进入大学</button>
+            </div>
+        </div>
+
+        <!-- Game Page -->
+        <div id="gamePage" class="page">
+            <div class="game-header">
+                <div class="player-info">
+                    <span class="player-name" id="displayName">张三</span> · <span id="displayMajor">计算机科学与技术</span>
+                </div>
+                <div class="time-info">
+                    <span id="currentYear">大一</span> 第<span id="currentSemester">1</span>学期 · 第<span id="currentRound">1</span>回合
+                </div>
+            </div>
+
+            <div class="attributes-panel">
+                <div class="attr-card">
+                    <div class="attr-header">
+                        <span class="attr-name">学业成绩</span>
+                        <span class="attr-value" id="academicValue">60</span>
+                    </div>
+                    <div class="attr-bar">
+                        <div class="attr-fill" id="academicFill" style="width: 60%"></div>
+                    </div>
+                </div>
+                <div class="attr-card">
+                    <div class="attr-header">
+                        <span class="attr-name">实践经验</span>
+                        <span class="attr-value" id="practiceValue">40</span>
+                    </div>
+                    <div class="attr-bar">
+                        <div class="attr-fill" id="practiceFill" style="width: 40%"></div>
+                    </div>
+                </div>
+                <div class="attr-card">
+                    <div class="attr-header">
+                        <span class="attr-name">身心健康</span>
+                        <span class="attr-value" id="healthValue">70</span>
+                    </div>
+                    <div class="attr-bar">
+                        <div class="attr-fill" id="healthFill" style="width: 70%"></div>
+                    </div>
+                </div>
+                <div class="attr-card">
+                    <div class="attr-header">
+                        <span class="attr-name">社交能力</span>
+                        <span class="attr-value" id="socialValue">50</span>
+                    </div>
+                    <div class="attr-bar">
+                        <div class="attr-fill" id="socialFill" style="width: 50%"></div>
+                    </div>
+                </div>
+                <div class="attr-card">
+                    <div class="attr-header">
+                        <span class="attr-name">社会贡献</span>
+                        <span class="attr-value" id="contributionValue">30</span>
+                    </div>
+                    <div class="attr-bar">
+                        <div class="attr-fill" id="contributionFill" style="width: 30%"></div>
+                    </div>
+                </div>
+                <div class="attr-card">
+                    <div class="attr-header">
+                        <span class="attr-name">综合能力</span>
+                        <span class="attr-value" id="comprehensiveValue">50</span>
+                    </div>
+                    <div class="attr-bar">
+                        <div class="attr-fill" id="comprehensiveFill" style="width: 50%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-card" id="eventCard">
+                <span class="event-round" id="eventRound">第 1 回合</span>
+                <h3 class="event-title" id="eventTitle">加载中...</h3>
+                <p class="event-description" id="eventDescription">请稍候...</p>
+                <div class="event-choices" id="eventChoices"></div>
+            </div>
+        </div>
+
+        <!-- Semester End Page -->
+        <div id="semesterEndPage" class="page semester-end">
+            <h2 class="semester-title" id="semesterTitle">第一学期结束</h2>
+            <p class="semester-subtitle" id="semesterSubtitle">回顾这一学期的经历</p>
+
+            <div class="radar-container">
+                <canvas id="radarChart" width="300" height="300"></canvas>
+            </div>
+
+            <div class="summary-text" id="semesterSummary"></div>
+
+            <button class="btn btn-primary" onclick="nextSemester()">进入下一学期</button>
+        </div>
+
+        <!-- Graduation Page -->
+        <div id="graduationPage" class="page graduation">
+            <div class="grade-badge" id="gradeBadge">S</div>
+            <h2 class="grade-title" id="gradeTitle">学业有成</h2>
+            <p class="grade-description" id="gradeDescription">恭喜你以优异的成绩完成了大学四年的学业！</p>
+
+            <div class="final-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="finalAcademic">85</div>
+                    <div class="stat-label">学业成绩</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="finalPractice">78</div>
+                    <div class="stat-label">实践经验</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="finalHealth">82</div>
+                    <div class="stat-label">身心健康</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="finalSocial">75</div>
+                    <div class="stat-label">社交能力</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="finalContribution">68</div>
+                    <div class="stat-label">社会贡献</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="finalComprehensive">80</div>
+                    <div class="stat-label">综合能力</div>
+                </div>
+            </div>
+
+            <div class="history-section">
+                <h3 class="history-title">人生轨迹</h3>
+                <div id="historyList"></div>
+            </div>
+
+            <button class="btn btn-secondary" onclick="restartGame()">重新开始</button>
+        </div>
+    </div>
 
     <script>
-        // 平滑滚动
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
+        // Game State
+        const state = {
+            playerName: '',
+            gender: 'male',
+            major: 'computer',
+            currentYear: 1,
+            currentSemester: 1,
+            currentRound: 1,
+            totalRounds: 0,
+            attributes: {
+                academic: 60,
+                practice: 40,
+                health: 70,
+                social: 50,
+                contribution: 30,
+                comprehensive: 50
+            },
+            history: [],
+            isGameOver: false
+        };
 
-        // 代码高亮（简单实现）
-        document.querySelectorAll('code').forEach(block => {
-            block.classList.add('highlighted');
-        });
+        // Events Database
+        const events = [
+            // 学业成绩事件
+            {
+                id: 'academic_positive_1',
+                attribute: 'academic',
+                title: '期中考试全系第一',
+                description: '经过一整个学期的努力学习，你在期中考试中取得了全系第一名的优异成绩！老师和同学们都对你刮目相看。',
+                choices: [
+                    { text: '继续保持，再接再厉', pointChange: 15, type: 'positive' },
+                    { text: '稍微放松一下犒劳自己', pointChange: 5, type: 'positive' }
+                ]
+            },
+            {
+                id: 'academic_positive_2',
+                attribute: 'academic',
+                title: '认真完成作业被表扬',
+                description: '你每次都认真完成老师布置的作业，甚至超额完成额外练习。老师在课堂上特别表扬了你的学习态度。',
+                choices: [
+                    { text: '继续保持好习惯', pointChange: 10, type: 'positive' },
+                    { text: '邀请同学一起学习', pointChange: 12, type: 'positive' }
+                ]
+            },
+            {
+                id: 'academic_positive_3',
+                attribute: 'academic',
+                title: '参加学术讲座',
+                description: '学校举办了一场知名教授的学术讲座，你积极参加并认真记录。讲座内容拓宽了你的学术视野。',
+                choices: [
+                    { text: '深入研究讲座内容', pointChange: 8, type: 'positive' },
+                    { text: '和同学讨论分享', pointChange: 6, type: 'positive' }
+                ]
+            },
+            {
+                id: 'academic_negative_1',
+                attribute: 'academic',
+                title: '通宵打游戏',
+                description: '你迷上了一款新出的网络游戏，连续三天通宵打游戏，白天上课完全没有精神，甚至错过了几节课。',
+                choices: [
+                    { text: '意识到错误，悬崖勒马', pointChange: -8, type: 'negative' },
+                    { text: '继续玩下去', pointChange: -15, type: 'negative' }
+                ]
+            },
+            {
+                id: 'academic_negative_2',
+                attribute: 'academic',
+                title: '期末考试不及格',
+                description: '由于平时学习不够努力，你的期末考试有两门专业课不及格，需要参加补考。',
+                choices: [
+                    { text: '认真准备补考', pointChange: -5, type: 'negative' },
+                    { text: '心存侥幸', pointChange: -12, type: 'negative' }
+                ]
+            },
+            {
+                id: 'academic_negative_3',
+                attribute: 'academic',
+                title: '逃课被发现',
+                description: '你经常逃课去打球或者睡懒觉，辅导员找你来谈话，说如果继续这样下去会影响毕业。',
+                choices: [
+                    { text: '承认错误，改正态度', pointChange: -5, type: 'negative' },
+                    { text: '找借口搪塞', pointChange: -10, type: 'negative' }
+                ]
+            },
+
+            // 实践经验事件
+            {
+                id: 'practice_positive_1',
+                attribute: 'practice',
+                title: '获得名企实习offer',
+                description: '你投递的简历收到了回复，一家世界500强企业给你发来了实习offer！这是一个难得的实践机会。',
+                choices: [
+                    { text: '珍惜机会，努力表现', pointChange: 15, type: 'positive' },
+                    { text: '觉得太累，考虑拒绝', pointChange: 5, type: 'positive' }
+                ]
+            },
+            {
+                id: 'practice_positive_2',
+                attribute: 'practice',
+                title: '当选学生会主席',
+                description: '在学生会换届选举中，你凭借出色的演讲和平时积累的人气，成功当选为学生会主席。',
+                choices: [
+                    { text: '全力以赴做好工作', pointChange: 12, type: 'positive' },
+                    { text: '借助平台拓展人脉', pointChange: 10, type: 'positive' }
+                ]
+            },
+            {
+                id: 'practice_positive_3',
+                attribute: 'practice',
+                title: '编程竞赛一等奖',
+                description: '你和队友在省级编程竞赛中通宵coding，最终获得了一等奖！这让很多企业对你印象深刻。',
+                choices: [
+                    { text: '继续参加更高级别比赛', pointChange: 10, type: 'positive' },
+                    { text: '总结经验，分享给同学', pointChange: 8, type: 'positive' }
+                ]
+            },
+            {
+                id: 'practice_negative_1',
+                attribute: 'practice',
+                title: '简历石沉大海',
+                description: '你精心制作的简历投递出去后如石沉大海，连一个面试电话都没有。这让你开始怀疑自己。',
+                choices: [
+                    { text: '反思不足，提升技能', pointChange: -5, type: 'negative' },
+                    { text: '继续海投', pointChange: -10, type: 'negative' }
+                ]
+            },
+            {
+                id: 'practice_negative_2',
+                attribute: 'practice',
+                title: '实习被辞退',
+                description: '你在实习期间表现不够积极，总是踩点上下班，最终被主管辞退了。这段经历让你反思很多。',
+                choices: [
+                    { text: '吸取教训，重新出发', pointChange: -8, type: 'negative' },
+                    { text: '觉得公司不识货', pointChange: -12, type: 'negative' }
+                ]
+            },
+            {
+                id: 'practice_negative_3',
+                attribute: 'practice',
+                title: '毕业前发现缺乏经验',
+                description: '即将毕业时，你发现自己简历上几乎没有像样的实践经历，而同学们都已经有了丰富的经验。',
+                choices: [
+                    { text: '最后努力一把', pointChange: -5, type: 'negative' },
+                    { text: '破罐子破摔', pointChange: -15, type: 'negative' }
+                ]
+            },
+
+            // 身心健康事件
+            {
+                id: 'health_positive_1',
+                attribute: 'health',
+                title: '坚持晨跑一学期',
+                description: '你养成了每天早起晨跑的习惯，一学期下来体测成绩满分，整个人也精神了很多。',
+                choices: [
+                    { text: '继续保持运动习惯', pointChange: 12, type: 'positive' },
+                    { text: '带动室友一起运动', pointChange: 15, type: 'positive' }
+                ]
+            },
+            {
+                id: 'health_positive_2',
+                attribute: 'health',
+                title: '运动会跳远冠军',
+                description: '在校运动会上，你奋力一跳打破了校记录，获得跳远冠军！全场为你欢呼鼓掌。',
+                choices: [
+                    { text: '继续冲击其他项目', pointChange: 10, type: 'positive' },
+                    { text: '分享夺冠经验', pointChange: 8, type: 'positive' }
+                ]
+            },
+            {
+                id: 'health_positive_3',
+                attribute: 'health',
+                title: '克服焦虑情绪',
+                description: '你意识到自己最近压力太大，于是开始学习冥想和心理调适，现在整个人轻松了很多。',
+                choices: [
+                    { text: '坚持心理调适训练', pointChange: 8, type: 'positive' },
+                    { text: '帮助有同样问题的同学', pointChange: 10, type: 'positive' }
+                ]
+            },
+            {
+                id: 'health_negative_1',
+                attribute: 'health',
+                title: '熬夜追剧身体变差',
+                description: '你迷上了一部剧，连续一周熬夜追剧，白天没精神吃饭，身体免疫力明显下降。',
+                choices: [
+                    { text: '赶紧调整作息', pointChange: -8, type: 'negative' },
+                    { text: '看完再说', pointChange: -12, type: 'negative' }
+                ]
+            },
+            {
+                id: 'health_negative_2',
+                attribute: 'health',
+                title: '抑郁情绪困扰',
+                description: '你最近情绪很低落，对什么都提不起兴趣，甚至不想去上课。这种状态已经持续了好几周。',
+                choices: [
+                    { text: '寻求心理咨询帮助', pointChange: -5, type: 'negative' },
+                    { text: '一个人默默承受', pointChange: -15, type: 'negative' }
+                ]
+            },
+            {
+                id: 'health_negative_3',
+                attribute: 'health',
+                title: '暴饮暴食体重飙升',
+                description: '你用吃来发泄压力，结果体重飙升了20斤。买衣服时发现以前的衣服都穿不下了。',
+                choices: [
+                    { text: '开始控制饮食', pointChange: -6, type: 'negative' },
+                    { text: '继续用吃来安慰自己', pointChange: -10, type: 'negative' }
+                ]
+            },
+
+            // 社交能力事件
+            {
+                id: 'social_positive_1',
+                attribute: 'social',
+                title: '社团结交朋友',
+                description: '在社团活动中，你遇到了几个志同道合的朋友，你们经常一起学习、一起玩耍，关系越来越好。',
+                choices: [
+                    { text: '珍惜友情，用心维护', pointChange: 10, type: 'positive' },
+                    { text: '拓展社交圈认识更多人', pointChange: 12, type: 'positive' }
+                ]
+            },
+            {
+                id: 'social_positive_2',
+                attribute: 'social',
+                title: '组织班级活动成功',
+                description: '你精心策划了一场班级秋游活动，从行程安排到经费预算都安排得井井有条，同学们玩得很开心。',
+                choices: [
+                    { text: '总结经验继续努力', pointChange: 12, type: 'positive' },
+                    { text: '争取组织更多活动', pointChange: 10, type: 'positive' }
+                ]
+            },
+            {
+                id: 'social_positive_3',
+                attribute: 'social',
+                title: '帮助同学赢得信任',
+                description: '室友生病时，你连续一周帮他带饭、补课。他的感激让你感受到了帮助他人的快乐。',
+                choices: [
+                    { text: '继续热心帮助他人', pointChange: 8, type: 'positive' },
+                    { text: '好人有好报', pointChange: 6, type: 'positive' }
+                ]
+            },
+            {
+                id: 'social_negative_1',
+                attribute: 'social',
+                title: '与室友激烈争吵',
+                description: '你和室友因为生活习惯问题发生了激烈的争吵，双方都说了很伤人的话，关系降到了冰点。',
+                choices: [
+                    { text: '主动道歉和解', pointChange: -8, type: 'negative' },
+                    { text: '冷战到底', pointChange: -12, type: 'negative' }
+                ]
+            },
+            {
+                id: 'social_negative_2',
+                attribute: 'social',
+                title: '朋友圈言论不当',
+                description: '你在朋友圈发表了一些不当言论，被同学截图转发，引起了不少人的不满和批评。',
+                choices: [
+                    { text: '删除发言并道歉', pointChange: -6, type: 'negative' },
+                    { text: '觉得无所谓', pointChange: -10, type: 'negative' }
+                ]
+            },
+            {
+                id: 'social_negative_3',
+                attribute: 'social',
+                title: '失恋后情绪崩溃',
+                description: '你暗恋很久的人有了对象，表白被拒绝后你情绪崩溃，无心学习和社交。',
+                choices: [
+                    { text: '找朋友倾诉，慢慢走出', pointChange: -5, type: 'negative' },
+                    { text: '封闭自己', pointChange: -8, type: 'negative' }
+                ]
+            },
+
+            // 社会贡献事件
+            {
+                id: 'contribution_positive_1',
+                attribute: 'contribution',
+                title: '山区支教一学期',
+                description: '你申请去偏远山区支教了一个学期，虽然条件艰苦，但看到孩子们的笑脸，你觉得一切都值得。',
+                choices: [
+                    { text: '继续为教育贡献力量', pointChange: 15, type: 'positive' },
+                    { text: '把经历写进简历', pointChange: 10, type: 'positive' }
+                ]
+            },
+            {
+                id: 'contribution_positive_2',
+                attribute: 'contribution',
+                title: '大型活动志愿者',
+                description: '你报名成为了冬奥会的志愿者，虽然工作很辛苦，但你为能参与这样的盛会感到自豪。',
+                choices: [
+                    { text: '继续参与志愿服务', pointChange: 12, type: 'positive' },
+                    { text: '结识了很多朋友', pointChange: 10, type: 'positive' }
+                ]
+            },
+            {
+                id: 'contribution_positive_3',
+                attribute: 'contribution',
+                title: '为流浪动物募捐',
+                description: '你组织了一场为流浪动物保护中心募捐的活动，成功筹集到了不少善款和物资。',
+                choices: [
+                    { text: '定期参与动物保护', pointChange: 10, type: 'positive' },
+                    { text: '影响更多同学参与', pointChange: 12, type: 'positive' }
+                ]
+            },
+            {
+                id: 'contribution_negative_1',
+                attribute: 'contribution',
+                title: '从不参与公益',
+                description: '你只顾着自己的学习和娱乐，对任何公益活动都不感兴趣，觉得与自己无关。',
+                choices: [
+                    { text: '尝试参与一次看看', pointChange: -4, type: 'negative' },
+                    { text: '继续我行我素', pointChange: -8, type: 'negative' }
+                ]
+            },
+            {
+                id: 'contribution_negative_2',
+                attribute: 'contribution',
+                title: '志愿者无故缺席',
+                description: '你报名了志愿者活动却在当天无故缺席，被组织方批评，学校也记录了你的不良表现。',
+                choices: [
+                    { text: '承认错误改正态度', pointChange: -5, type: 'negative' },
+                    { text: '觉得没什么大不了', pointChange: -10, type: 'negative' }
+                ]
+            },
+
+            // 综合能力事件
+            {
+                id: 'comprehensive_positive_1',
+                attribute: 'comprehensive',
+                title: '雅思考试8分',
+                description: '你刻苦学习英语，雅思考试取得了8分的高分！这个消息让你信心大增。',
+                choices: [
+                    { text: '继续学习其他语言', pointChange: 12, type: 'positive' },
+                    { text: '申请海外交换生', pointChange: 15, type: 'positive' }
+                ]
+            },
+            {
+                id: 'comprehensive_positive_2',
+                attribute: 'comprehensive',
+                title: '学会情绪管理',
+                description: '通过阅读心理学书籍和实践，你学会了如何管理自己的情绪，面对压力更加从容。',
+                choices: [
+                    { text: '帮助更多人学会情绪管理', pointChange: 10, type: 'positive' },
+                    { text: '继续提升心理素质', pointChange: 8, type: 'positive' }
+                ]
+            },
+            {
+                id: 'comprehensive_positive_3',
+                attribute: 'comprehensive',
+                title: '摄影作品获奖',
+                description: '你培养了摄影这个爱好，作品在校园摄影大赛中获得了一等奖，展现了另一面的才华。',
+                choices: [
+                    { text: '继续深耕摄影技术', pointChange: 8, type: 'positive' },
+                    { text: '用作品记录大学生活', pointChange: 10, type: 'positive' }
+                ]
+            },
+            {
+                id: 'comprehensive_negative_1',
+                attribute: 'comprehensive',
+                title: '面对压力选择逃避',
+                description: '面对学业和生活的压力，你选择了逃避，整天窝在宿舍里不去上课、不见人。',
+                choices: [
+                    { text: '鼓起勇气面对', pointChange: -6, type: 'negative' },
+                    { text: '继续逃避', pointChange: -10, type: 'negative' }
+                ]
+            },
+            {
+                id: 'comprehensive_negative_2',
+                attribute: 'comprehensive',
+                title: '没有一技之长',
+                description: '即将毕业时，你发现自己除了上课学的内容，什么拿得出手的技能都没有。',
+                choices: [
+                    { text: '开始学习实用技能', pointChange: -5, type: 'negative' },
+                    { text: '得过且过', pointChange: -8, type: 'negative' }
+                ]
+            },
+            {
+                id: 'comprehensive_negative_3',
+                attribute: 'comprehensive',
+                title: '财务危机',
+                description: '你冲动消费导致信用卡欠债，无力支付下学期的生活费，不得不向家里要钱。',
+                choices: [
+                    { text: '反思消费习惯，学会理财', pointChange: -8, type: 'negative' },
+                    { text: '继续刷卡消费', pointChange: -15, type: 'negative' }
+                ]
+            }
+        ];
+
+        // Major names mapping
+        const majorNames = {
+            computer: '计算机科学与技术',
+            business: '工商管理',
+            design: '艺术设计',
+            journalism: '新闻传播学',
+            law: '法学',
+            medicine: '临床医学'
+        };
+
+        // Year names
+        const yearNames = ['大一', '大二', '大三', '大四'];
+
+        // Page navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // Start game
+        function startGame() {
+            const name = document.getElementById('playerName').value.trim() || '匿名玩家';
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const major = document.getElementById('major').value;
+
+            state.playerName = name;
+            state.gender = gender;
+            state.major = major;
+            state.currentYear = 1;
+            state.currentSemester = 1;
+            state.currentRound = 1;
+            state.totalRounds = 0;
+            state.attributes = {
+                academic: 60,
+                practice: 40,
+                health: 70,
+                social: 50,
+                contribution: 30,
+                comprehensive: 50
+            };
+            state.history = [];
+            state.isGameOver = false;
+
+            showPage('gamePage');
+            updateUI();
+            showRandomEvent();
+        }
+
+        // Update UI
+        function updateUI() {
+            document.getElementById('displayName').textContent = state.playerName;
+            document.getElementById('displayMajor').textContent = majorNames[state.major];
+            document.getElementById('currentYear').textContent = yearNames[state.currentYear - 1];
+            document.getElementById('currentSemester').textContent = state.currentSemester;
+            document.getElementById('currentRound').textContent = state.currentRound;
+
+            // Update attribute displays
+            updateAttributeDisplay('academic', state.attributes.academic);
+            updateAttributeDisplay('practice', state.attributes.practice);
+            updateAttributeDisplay('health', state.attributes.health);
+            updateAttributeDisplay('social', state.attributes.social);
+            updateAttributeDisplay('contribution', state.attributes.contribution);
+            updateAttributeDisplay('comprehensive', state.attributes.comprehensive);
+        }
+
+        function updateAttributeDisplay(attr, value) {
+            const valueEl = document.getElementById(`${attr}Value`);
+            const fillEl = document.getElementById(`${attr}Fill`);
+
+            valueEl.textContent = value;
+            fillEl.style.width = `${Math.max(0, Math.min(100, value))}%`;
+
+            // Update color classes
+            valueEl.classList.remove('high', 'medium', 'low');
+            fillEl.classList.remove('high', 'medium', 'low');
+
+            if (value >= 70) {
+                valueEl.classList.add('high');
+                fillEl.classList.add('high');
+            } else if (value >= 40) {
+                valueEl.classList.add('medium');
+                fillEl.classList.add('medium');
+            } else {
+                valueEl.classList.add('low');
+                fillEl.classList.add('low');
+            }
+        }
+
+        // Show random event
+        function showRandomEvent() {
+            // Filter events that are relevant to current state
+            let relevantEvents = events.filter(e => {
+                const currentValue = state.attributes[e.attribute];
+                // Can include both positive and negative events
+                return true;
+            });
+
+            // Pick random event
+            const event = relevantEvents[Math.floor(Math.random() * relevantEvents.length)];
+
+            document.getElementById('eventRound').textContent = `第 ${state.currentRound} 回合`;
+            document.getElementById('eventTitle').textContent = event.title;
+            document.getElementById('eventDescription').textContent = event.description;
+
+            const choicesContainer = document.getElementById('eventChoices');
+            choicesContainer.innerHTML = '';
+
+            event.choices.forEach((choice, index) => {
+                const btn = document.createElement('button');
+                btn.className = `btn-choice ${choice.type}`;
+                btn.innerHTML = `${choice.text}<span class="point-change ${choice.type}">${choice.pointChange > 0 ? '+' : ''}${choice.pointChange}</span>`;
+                btn.onclick = () => makeChoice(event, index, choice);
+                choicesContainer.appendChild(btn);
+            });
+
+            // Store current event for later
+            window.currentEvent = event;
+        }
+
+        // Make choice
+        function makeChoice(event, choiceIndex, choice) {
+            // Update attribute
+            const attr = event.attribute;
+            state.attributes[attr] = Math.max(0, Math.min(100, state.attributes[attr] + choice.pointChange));
+
+            // Record history
+            state.history.push({
+                round: state.totalRounds + 1,
+                eventId: event.id,
+                title: event.title,
+                choiceText: choice.text,
+                pointChange: choice.pointChange,
+                attribute: attr
+            });
+
+            state.totalRounds++;
+            state.currentRound++;
+
+            // Check game over conditions
+            if (checkGameOver()) {
+                return;
+            }
+
+            // Check if semester is over (3 rounds per semester)
+            if (state.currentRound > 3) {
+                showSemesterEnd();
+            } else {
+                updateUI();
+                showRandomEvent();
+            }
+        }
+
+        // Check game over
+        function checkGameOver() {
+            // Check for any attribute below 20
+            for (const [attr, value] of Object.entries(state.attributes)) {
+                if (value < 20) {
+                    showGameOver('E');
+                    return true;
+                }
+            }
+
+            // Check academic below 40 at end of 4 years
+            if (state.currentYear > 4 || (state.currentYear === 4 && state.currentSemester === 2 && state.currentRound > 3)) {
+                if (state.attributes.academic < 40) {
+                    showGameOver('E');
+                    return true;
+                }
+                showGraduation();
+                return true;
+            }
+
+            return false;
+        }
+
+        // Show semester end
+        function showSemesterEnd() {
+            document.getElementById('semesterTitle').textContent = `${yearNames[state.currentYear - 1]}第${state.currentSemester}学期结束`;
+            document.getElementById('semesterSubtitle').textContent = '回顾这一学期的经历';
+
+            // Calculate semester summary
+            const semesterHistory = state.history.slice(-3);
+            let summary = '';
+            const positives = semesterHistory.filter(h => h.pointChange > 0);
+            const negatives = semesterHistory.filter(h => h.pointChange < 0);
+
+            if (positives.length > negatives.length) {
+                summary = `这学期你收获颇丰！${positives.length}件好事让你成长了不少。`;
+            } else if (negatives.length > positives.length) {
+                summary = `这学期遇到了一些挑战，${negatives.length}件不如意的事需要你反思和改进。`;
+            } else {
+                summary = '这学期平平淡淡，有收获也有遗憾，继续加油！';
+            }
+
+            document.getElementById('semesterSummary').textContent = summary;
+
+            // Draw radar chart
+            drawRadarChart();
+
+            showPage('semesterEndPage');
+        }
+
+        // Draw radar chart
+        function drawRadarChart() {
+            const canvas = document.getElementById('radarChart');
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 100;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const labels = ['学业', '实践', '健康', '社交', '贡献', '综合'];
+            const values = [
+                state.attributes.academic,
+                state.attributes.practice,
+                state.attributes.health,
+                state.attributes.social,
+                state.attributes.contribution,
+                state.attributes.comprehensive
+            ];
+
+            const angleStep = (Math.PI * 2) / 6;
+
+            // Draw background circles
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let r = 20; r <= radius; r += 20) {
+                ctx.beginPath();
+                for (let i = 0; i <= 6; i++) {
+                    const angle = i * angleStep - Math.PI / 2;
+                    const x = centerX + Math.cos(angle) * r;
+                    const y = centerY + Math.sin(angle) * r;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.stroke();
+            }
+
+            // Draw axes
+            ctx.strokeStyle = '#ccc';
+            for (let i = 0; i < 6; i++) {
+                const angle = i * angleStep - Math.PI / 2;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(centerX + Math.cos(angle) * radius, centerY + Math.sin(angle) * radius);
+                ctx.stroke();
+            }
+
+            // Draw labels
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Noto Sans SC';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            for (let i = 0; i < 6; i++) {
+                const angle = i * angleStep - Math.PI / 2;
+                const x = centerX + Math.cos(angle) * (radius + 25);
+                const y = centerY + Math.sin(angle) * (radius + 25);
+                ctx.fillText(labels[i], x, y);
+            }
+
+            // Draw data polygon
+            ctx.beginPath();
+            ctx.fillStyle = 'rgba(30, 58, 95, 0.3)';
+            ctx.strokeStyle = '#1e3a5f';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 6; i++) {
+                const angle = i * angleStep - Math.PI / 2;
+                const value = values[i] / 100 * radius;
+                const x = centerX + Math.cos(angle) * value;
+                const y = centerY + Math.sin(angle) * value;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Draw data points
+            ctx.fillStyle = '#d4af37';
+            for (let i = 0; i < 6; i++) {
+                const angle = i * angleStep - Math.PI / 2;
+                const value = values[i] / 100 * radius;
+                const x = centerX + Math.cos(angle) * value;
+                const y = centerY + Math.sin(angle) * value;
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Next semester
+        function nextSemester() {
+            state.currentRound = 1;
+
+            if (state.currentSemester === 1) {
+                state.currentSemester = 2;
+            } else {
+                state.currentSemester = 1;
+                state.currentYear++;
+            }
+
+            // Add small random attribute changes between semesters
+            for (const attr in state.attributes) {
+                const change = Math.floor(Math.random() * 5) - 2; // -2 to +2
+                state.attributes[attr] = Math.max(0, Math.min(100, state.attributes[attr] + change));
+            }
+
+            if (state.currentYear > 4) {
+                showGraduation();
+            } else {
+                showPage('gamePage');
+                updateUI();
+                showRandomEvent();
+            }
+        }
+
+        // Show game over
+        function showGameOver(grade) {
+            showGraduation(grade);
+        }
+
+        // Show graduation
+        function showGraduation(forcedGrade) {
+            let grade, title, description;
+
+            // Calculate grade
+            if (forcedGrade) {
+                grade = forcedGrade;
+            } else {
+                const avg = Object.values(state.attributes).reduce((a, b) => a + b, 0) / 6;
+                const allAbove70 = Object.values(state.attributes).every(v => v >= 70);
+                const allAbove60 = Object.values(state.attributes).every(v => v >= 60);
+                const allAbove50 = Object.values(state.attributes).every(v => v >= 50);
+
+                if (avg >= 85 && allAbove70) grade = 'S';
+                else if (avg >= 75 && allAbove60) grade = 'A';
+                else if (avg >= 65 && allAbove50) grade = 'B';
+                else if (avg >= 55 && state.attributes.academic >= 40) grade = 'C';
+                else if (state.attributes.academic >= 40) grade = 'D';
+                else grade = 'E';
+            }
+
+            const gradeInfo = {
+                'S': { title: '全能之星', desc: '完美大学四年！你全面发展的优秀表现让你成为众人眼中的传奇人物，前途光明！' },
+                'A': { title: '学业标兵', desc: '表现优异！你在多个方面都取得了出色的成绩，是同学眼中的佼佼者。' },
+                'B': { title: '稳健发展', desc: '良好平衡！你的大学生活充实而有意义，为未来打下了坚实基础。' },
+                'C': { title: '顺利毕业', desc: '合格毕业！虽然不是最优秀的，但你完成了大学学业，可以迎接新的挑战。' },
+                'D': { title: '勉强毕业', desc: '艰难毕业！你的大学生活充满波折，但最终还是拿到了毕业证书。' },
+                'E': { title: '未能毕业', desc: '遗憾退场！由于种种原因，你未能完成大学学业，这段经历值得反思。' }
+            };
+
+            const info = gradeInfo[grade];
+
+            // Update graduation page
+            const badge = document.getElementById('gradeBadge');
+            badge.textContent = grade;
+            badge.className = `grade-badge grade-${grade.toLowerCase()}`;
+
+            document.getElementById('gradeTitle').textContent = info.title;
+            document.getElementById('gradeDescription').textContent = info.desc;
+
+            // Update final stats
+            document.getElementById('finalAcademic').textContent = state.attributes.academic;
+            document.getElementById('finalPractice').textContent = state.attributes.practice;
+            document.getElementById('finalHealth').textContent = state.attributes.health;
+            document.getElementById('finalSocial').textContent = state.attributes.social;
+            document.getElementById('finalContribution').textContent = state.attributes.contribution;
+            document.getElementById('finalComprehensive').textContent = state.attributes.comprehensive;
+
+            // Update history
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            state.history.slice(-10).reverse().forEach(h => {
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                item.innerHTML = `
+                    <span class="history-event">${h.title}</span>
+                    <span class="history-change" style="color: ${h.pointChange >= 0 ? 'var(--success)' : 'var(--danger)'}">${h.pointChange >= 0 ? '+' : ''}${h.pointChange}</span>
+                `;
+                historyList.appendChild(item);
+            });
+
+            showPage('graduationPage');
+        }
+
+        // Restart game
+        function restartGame() {
+            showPage('startPage');
+        }
     </script>
 </body>
 </html>
